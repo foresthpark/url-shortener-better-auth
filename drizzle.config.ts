@@ -1,5 +1,5 @@
 import { config } from "dotenv";
-import { defineConfig } from "drizzle-kit";
+import { Config, defineConfig } from "drizzle-kit";
 
 config({ path: ".env" });
 
@@ -11,4 +11,4 @@ export default defineConfig({
     url: process.env.DATABASE_URL!,
   },
   tablesFilter: ["url-shortener-neon-better-auth_*"],
-});
+}) satisfies Config;
