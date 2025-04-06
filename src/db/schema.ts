@@ -53,3 +53,10 @@ export const verification = createTable("verification", {
   createdAt: timestamp("created_at"),
   updatedAt: timestamp("updated_at"),
 });
+
+export const schema = {
+  user,
+  session,
+  account,
+  verification,
+};
