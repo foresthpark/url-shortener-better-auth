@@ -54,9 +54,16 @@ export const verification = createTable("verification", {
   updatedAt: timestamp("updated_at"),
 });
 
+export const url = createTable("url", {
+  id: text("id").primaryKey(),
+  url: text("url").notNull(),
+  shortUrl: text("short_url").notNull(),
+});
+
 export const schema = {
   user,
   session,
   account,
   verification,
+  url,
 };
