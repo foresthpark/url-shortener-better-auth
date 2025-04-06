@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { trpc } from "@/utils/trpc";
 
 // Define the form schema
 const urlSchema = z.object({
@@ -16,6 +17,10 @@ export default function UrlPage() {
   const [shortUrl, setShortUrl] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Use tRPC query to fetch URL list
+  const urlList = trpc.urlList.useQuery();
+  console.log("🚀 ~ UrlPage ~ urlList:", urlList);
 
   const {
     register,
@@ -115,6 +120,21 @@ export default function UrlPage() {
               📋
             </button>
           </div>
+        </div>
+      )}
+
+      {/* Display the URL list from tRPC */}
+      {urlList.data && (
+        <div className="mt-8">
+          <h2 className="text-xl font-semibold mb-3">Your URLs</h2>
+          <ul className="space-y-2">
+            {urlList.data.map((url) => (
+              <li key={url.id} className="p-2 bg-gray-50 rounded">
+                <div className="text-sm text-gray-500">{url.shortUrl}</div>
+                <div className="text-sm truncate">{url.url}</div>
+              </li>
+            ))}
+          </ul>
         </div>
       )}
     </div>
