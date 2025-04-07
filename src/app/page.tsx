@@ -14,12 +14,12 @@ import {
 export default function UrlShortener() {
   return (
     <div className="flex flex-col min-h-screen">
-      <main className="flex-1">
+      <div className="flex-1">
         {/* Hero Section */}
         <CreateShortUrl />
 
         {/* Features Section */}
-        <section className="py-20 bg-background">
+        <div className="py-20 bg-background">
           <div className="container px-4 mx-auto md:px-6">
             <div className="text-center">
               <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
@@ -74,10 +74,10 @@ export default function UrlShortener() {
               </div>
             </div>
           </div>
-        </section>
+        </div>
 
         {/* Stats Section */}
-        <section className="py-20 bg-muted/30">
+        <div className="py-20 bg-muted/30">
           <div className="container px-4 mx-auto md:px-6">
             <div className="grid gap-8 text-center md:grid-cols-3">
               <div>
@@ -94,10 +94,10 @@ export default function UrlShortener() {
               </div>
             </div>
           </div>
-        </section>
+        </div>
 
         {/* CTA Section */}
-        <section className="py-20 bg-primary/5">
+        <div className="py-20 bg-primary/5">
           <div className="container px-4 mx-auto text-center md:px-6">
             <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
               Ready to supercharge your links?
@@ -115,8 +115,8 @@ export default function UrlShortener() {
               </Button>
             </div>
           </div>
-        </section>
-      </main>
+        </div>
+      </div>
 
       {/* Footer */}
       <footer className="py-10 border-t">

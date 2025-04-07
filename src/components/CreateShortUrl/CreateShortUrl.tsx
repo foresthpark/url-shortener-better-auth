@@ -51,8 +51,8 @@ export default function CreateShortUrl() {
   };
 
   return (
-    <section className="relative">
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-primary/10 -z-10" />
+    <div className="bg-primary/5">
+      <div className="bginset-0 bg-gradient-to-br from-primary/5 to-primary/10 -z-10" />
       <div className="container px-4 py-20 mx-auto text-center md:py-32 md:px-6">
         <h1 className="text-4xl font-extrabold tracking-tight md:text-5xl lg:text-6xl">
           Shorten your links,{" "}
@@ -114,6 +114,6 @@ export default function CreateShortUrl() {
           )}
         </div>
       </div>
-    </section>
+    </div>
   );
 }
