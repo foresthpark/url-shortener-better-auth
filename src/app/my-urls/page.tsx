@@ -20,7 +20,6 @@ export default function UrlPage() {
 
   const { data: userUrls, isLoading } = trpc.url.urlList.useQuery();
 
-  console.log("🚀 ~ UrlPage ~ isLoading:", isLoading);
   const isLoggedIn = !!session?.user;
 
   return (
