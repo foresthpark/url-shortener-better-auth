@@ -104,7 +104,7 @@ export default function UrlShortener() {
             </h2>
             <p className="max-w-2xl mx-auto mt-4 text-muted-foreground">
               Join thousands of marketers, content creators, and businesses who
-              trust ShortLink.
+              trust Petite Links.
             </p>
             <div className="flex flex-col gap-4 mt-8 md:flex-row md:justify-center">
               <Button size="lg" className="gap-2">
@@ -124,7 +124,7 @@ export default function UrlShortener() {
           <div className="flex flex-col items-center justify-between gap-6 md:flex-row">
             <div className="flex items-center gap-2">
               <LinkIcon className="w-5 h-5 text-primary" />
-              <span className="text-lg font-semibold">ShortLink</span>
+              <span className="text-lg font-semibold">Petite Links</span>
             </div>
             <div className="flex gap-6 text-sm text-muted-foreground">
               <a href="#" className="hover:text-foreground">
@@ -141,7 +141,7 @@ export default function UrlShortener() {
               </a>
             </div>
             <p className="text-sm text-muted-foreground">
-              © 2024 ShortLink. All rights reserved.
+              © {new Date().getFullYear()} Petite Links. All rights reserved.
             </p>
           </div>
         </div>

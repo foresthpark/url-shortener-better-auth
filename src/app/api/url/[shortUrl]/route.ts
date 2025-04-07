@@ -1,14 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/db/db";
 import { url } from "@/db/schema";
 import { eq } from "drizzle-orm";
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { shortUrl: string } }
-) {
+export async function GET(request: NextRequest, params: any) {
   try {
-    const { shortUrl } = await params;
+    const { shortUrl } = (await params).params;
 
     if (!shortUrl) {
       return NextResponse.json(
