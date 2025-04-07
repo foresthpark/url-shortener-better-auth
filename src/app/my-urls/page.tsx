@@ -15,7 +15,7 @@ import { trpc } from "@/utils/trpc";
 // Define the form schema
 
 export default function UrlPage() {
-  // Use tRPC query to fetch URL list
+  // Use tRPC query to fetch URL lis
   const { data: session } = authClient.useSession();
 
   const { data: userUrls, isLoading } = trpc.url.urlList.useQuery();
