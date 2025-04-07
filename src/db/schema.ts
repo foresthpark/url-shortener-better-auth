@@ -1,3 +1,4 @@
+import { relations } from "drizzle-orm";
 import { text, timestamp, boolean, pgTableCreator } from "drizzle-orm/pg-core";
 
 export const createTable = pgTableCreator(
@@ -58,7 +59,17 @@ export const url = createTable("url", {
   id: text("id").primaryKey(),
   url: text("url").notNull(),
   shortUrl: text("short_url").notNull(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
 });
+
+const urlRelations = relations(url, ({ one }) => ({
+  user: one(user, {
+    fields: [url.userId],
+    references: [user.id],
+  }),
+}));
 
 export const schema = {
   user,
@@ -66,4 +77,5 @@ export const schema = {
   account,
   verification,
   url,
+  urlRelations,
 };

@@ -1,13 +1,18 @@
 import { initTRPC } from "@trpc/server";
 import { FetchCreateContextFnOptions } from "@trpc/server/adapters/fetch";
+import { auth } from "@/lib/auth";
 /**
  * Initialization of tRPC backend
  * Should be done only once per backend!
  */
 // Create context for tRPC requests
 export const createTRPCContext = async (opts: FetchCreateContextFnOptions) => {
+  const session = await auth.api.getSession({
+    headers: opts.req.headers,
+  });
+
   return {
-    // You can add user session, headers, etc. here
+    session,
   };
 };
 

@@ -1,103 +1,195 @@
-import { Button } from "@/components/ui/button";
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import type React from "react";
+
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Copy,
+  LinkIcon,
+  ArrowRight,
+  Check,
+  BarChart3,
+  Zap,
+  Shield,
+  Globe,
+} from "lucide-react";
+import { toast } from "sonner";
+import { trpc } from "@/utils/trpc";
+import { authClient } from "@/lib/auth-client";
+import CreateShortUrl from "@/components/CreateShortUrl/CreateShortUrl";
+
+export default function UrlShortener() {
+  const [url, setUrl] = useState("");
+  const [shortUrl, setShortUrl] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const { data: session } = authClient.useSession();
+
+  const isLoggedIn = !!session?.user;
+
+  const createUrlMutation = trpc.createUrl.useMutation({
+    onSuccess: (data) => {
+      setShortUrl(data.shortUrl);
+    },
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!url) return;
+
+    setIsLoading(true);
+
+    // Mock shortening - just for UI demonstration
+    setTimeout(() => {
+      const shortCode = Math.random().toString(36).substring(2, 8);
+      setShortUrl(`short.link/${shortCode}`);
+      setIsLoading(false);
+    }, 800);
+  };
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(shortUrl);
+    setCopied(true);
+    toast.success("Short URL copied to clipboard");
+
+    setTimeout(() => setCopied(false), 2000);
+  };
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-        <Button>Click me</Button>
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
+    <div className="flex flex-col min-h-screen">
+      <main className="flex-1">
+        {/* Hero Section */}
+        <CreateShortUrl />
+
+        {/* Features Section */}
+        <section className="py-20 bg-background">
+          <div className="container px-4 mx-auto md:px-6">
+            <div className="text-center">
+              <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
+                Powerful features for your links
+              </h2>
+              <p className="max-w-2xl mx-auto mt-4 text-muted-foreground">
+                Everything you need to manage, track, and optimize your
+                shortened URLs.
+              </p>
+            </div>
+
+            <div className="grid gap-8 mt-16 md:grid-cols-2 lg:grid-cols-4">
+              <div className="p-6 text-center bg-background rounded-xl shadow-sm border">
+                <div className="flex items-center justify-center w-12 h-12 mx-auto bg-primary/10 rounded-full">
+                  <BarChart3 className="w-6 h-6 text-primary" />
+                </div>
+                <h3 className="mt-4 text-xl font-medium">Advanced Analytics</h3>
+                <p className="mt-2 text-muted-foreground">
+                  Track clicks, locations, devices, and referrers in real-time.
+                </p>
+              </div>
+
+              <div className="p-6 text-center bg-background rounded-xl shadow-sm border">
+                <div className="flex items-center justify-center w-12 h-12 mx-auto bg-primary/10 rounded-full">
+                  <Zap className="w-6 h-6 text-primary" />
+                </div>
+                <h3 className="mt-4 text-xl font-medium">Lightning Fast</h3>
+                <p className="mt-2 text-muted-foreground">
+                  Global CDN ensures your links redirect instantly from
+                  anywhere.
+                </p>
+              </div>
+
+              <div className="p-6 text-center bg-background rounded-xl shadow-sm border">
+                <div className="flex items-center justify-center w-12 h-12 mx-auto bg-primary/10 rounded-full">
+                  <Shield className="w-6 h-6 text-primary" />
+                </div>
+                <h3 className="mt-4 text-xl font-medium">Secure & Reliable</h3>
+                <p className="mt-2 text-muted-foreground">
+                  99.9% uptime and enterprise-grade security for your links.
+                </p>
+              </div>
+
+              <div className="p-6 text-center bg-background rounded-xl shadow-sm border">
+                <div className="flex items-center justify-center w-12 h-12 mx-auto bg-primary/10 rounded-full">
+                  <Globe className="w-6 h-6 text-primary" />
+                </div>
+                <h3 className="mt-4 text-xl font-medium">Custom Domains</h3>
+                <p className="mt-2 text-muted-foreground">
+                  Use your own branded domain for all your shortened links.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Stats Section */}
+        <section className="py-20 bg-muted/30">
+          <div className="container px-4 mx-auto md:px-6">
+            <div className="grid gap-8 text-center md:grid-cols-3">
+              <div>
+                <p className="text-4xl font-bold text-primary">10M+</p>
+                <p className="mt-2 text-muted-foreground">Links shortened</p>
+              </div>
+              <div>
+                <p className="text-4xl font-bold text-primary">5B+</p>
+                <p className="mt-2 text-muted-foreground">Clicks tracked</p>
+              </div>
+              <div>
+                <p className="text-4xl font-bold text-primary">50K+</p>
+                <p className="mt-2 text-muted-foreground">Happy customers</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* CTA Section */}
+        <section className="py-20 bg-primary/5">
+          <div className="container px-4 mx-auto text-center md:px-6">
+            <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
+              Ready to supercharge your links?
+            </h2>
+            <p className="max-w-2xl mx-auto mt-4 text-muted-foreground">
+              Join thousands of marketers, content creators, and businesses who
+              trust ShortLink.
+            </p>
+            <div className="flex flex-col gap-4 mt-8 md:flex-row md:justify-center">
+              <Button size="lg" className="gap-2">
+                Get started for free <ArrowRight className="w-4 h-4" />
+              </Button>
+              <Button variant="outline" size="lg">
+                View pricing
+              </Button>
+            </div>
+          </div>
+        </section>
       </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+
+      {/* Footer */}
+      <footer className="py-10 border-t">
+        <div className="container px-4 mx-auto md:px-6">
+          <div className="flex flex-col items-center justify-between gap-6 md:flex-row">
+            <div className="flex items-center gap-2">
+              <LinkIcon className="w-5 h-5 text-primary" />
+              <span className="text-lg font-semibold">ShortLink</span>
+            </div>
+            <div className="flex gap-6 text-sm text-muted-foreground">
+              <a href="#" className="hover:text-foreground">
+                Terms
+              </a>
+              <a href="#" className="hover:text-foreground">
+                Privacy
+              </a>
+              <a href="#" className="hover:text-foreground">
+                Cookies
+              </a>
+              <a href="#" className="hover:text-foreground">
+                Contact
+              </a>
+            </div>
+            <p className="text-sm text-muted-foreground">
+              © 2024 ShortLink. All rights reserved.
+            </p>
+          </div>
+        </div>
       </footer>
     </div>
   );
