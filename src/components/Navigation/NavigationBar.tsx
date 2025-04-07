@@ -7,10 +7,10 @@ export default function NavigationBar() {
   return (
     <header className="border-b">
       <div className="container flex items-center justify-between h-16 px-4 mx-auto md:px-6">
-        <div className="flex items-center gap-2">
+        <Link href="/" className="flex items-center gap-2">
           <LinkIcon className="w-6 h-6 text-primary" />
-          <span className="text-xl font-bold">ShortLink</span>
-        </div>
+          <span className="text-xl font-bold">Petite Links</span>
+        </Link>
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="sm">
             <Link href="/my-urls">My Urls</Link>

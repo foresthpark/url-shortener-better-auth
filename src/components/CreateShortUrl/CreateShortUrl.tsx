@@ -13,30 +13,32 @@ import { toast } from "sonner";
 export default function CreateShortUrl() {
   const [url, setUrl] = useState("");
   const [shortUrl, setShortUrl] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const [copied, setCopied] = useState(false);
   const { data: session } = authClient.useSession();
 
   const isLoggedIn = !!session?.user;
 
-  const createUrlMutation = trpc.createUrl.useMutation({
+  const { mutateAsync, isPending } = trpc.url.createUrl.useMutation({
     onSuccess: (data) => {
-      setShortUrl(data.shortUrl);
+      setShortUrl(`${window.location.origin}/api/url/${data.shortUrl}`);
     },
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!url) return;
+    if (!isLoggedIn) {
+      toast.error("Please login to create a short URL");
+      return;
+    }
 
-    setIsLoading(true);
+    if (!url) return;
 
     // Mock shortening - just for UI demonstration
     setTimeout(() => {
-      const shortCode = Math.random().toString(36).substring(2, 8);
-      setShortUrl(`short.link/${shortCode}`);
-      setIsLoading(false);
+      mutateAsync({
+        url,
+      });
     }, 800);
   };
 
@@ -77,8 +79,8 @@ export default function CreateShortUrl() {
                 required
               />
             </div>
-            <Button type="submit" className="h-12" disabled={isLoading}>
-              {isLoading ? "Shortening..." : "Shorten URL"}
+            <Button type="submit" className="h-12" disabled={isPending}>
+              {isPending ? "Shortening..." : "Shorten URL"}
             </Button>
           </form>
 
@@ -87,7 +89,7 @@ export default function CreateShortUrl() {
             <div className="p-4 mt-4 border rounded-lg bg-muted/30">
               <div className="flex flex-col items-start gap-2 md:flex-row md:items-center md:justify-between">
                 <div>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm text-muted-foreground text-left">
                     Your shortened URL:
                   </p>
                   <p className="text-lg font-medium">{shortUrl}</p>
