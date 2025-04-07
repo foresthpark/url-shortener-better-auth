@@ -17,6 +17,13 @@ export async function GET(
       );
     }
 
+    // Get the User-Agent header to detect device type
+    const userAgent = request.headers.get("user-agent") || "";
+    const isMobile =
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        userAgent
+      );
+
     // Look up the original URL in the database
     const urlRecord = await db.query.url.findFirst({
       where: eq(url.shortUrl, shortUrl),
@@ -25,6 +32,18 @@ export async function GET(
     if (!urlRecord) {
       return NextResponse.json({ error: "URL not found" }, { status: 404 });
     }
+
+    // Increment the click count and update mobile clicks if applicable
+    await db
+      .update(url)
+      .set({
+        clicks: (urlRecord.clicks || 0) + 1,
+        mobileClicks: isMobile
+          ? (urlRecord.mobileClicks || 0) + 1
+          : urlRecord.mobileClicks || 0,
+        lastClickedAt: new Date(),
+      })
+      .where(eq(url.shortUrl, shortUrl));
 
     // Redirect to the original URL
     return NextResponse.redirect(urlRecord.url);

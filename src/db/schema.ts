@@ -1,5 +1,11 @@
 import { relations } from "drizzle-orm";
-import { text, timestamp, boolean, pgTableCreator } from "drizzle-orm/pg-core";
+import {
+  text,
+  timestamp,
+  boolean,
+  pgTableCreator,
+  integer,
+} from "drizzle-orm/pg-core";
 
 export const createTable = pgTableCreator(
   (name) => `url-shortener-neon-better-auth_${name}`
@@ -62,6 +68,9 @@ export const url = createTable("url", {
   userId: text("user_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
+  clicks: integer("clicks").default(0),
+  mobileClicks: integer("mobile_clicks").default(0),
+  lastClickedAt: timestamp("last_clicked_at"),
 });
 
 const urlRelations = relations(url, ({ one }) => ({

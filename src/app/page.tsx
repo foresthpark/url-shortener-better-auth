@@ -1,62 +1,17 @@
 "use client";
 
-import type React from "react";
-
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Copy,
-  LinkIcon,
-  ArrowRight,
-  Check,
-  BarChart3,
-  Zap,
-  Shield,
-  Globe,
-} from "lucide-react";
-import { toast } from "sonner";
-import { trpc } from "@/utils/trpc";
-import { authClient } from "@/lib/auth-client";
 import CreateShortUrl from "@/components/CreateShortUrl/CreateShortUrl";
+import { Button } from "@/components/ui/button";
+import {
+  ArrowRight,
+  BarChart3,
+  Globe,
+  LinkIcon,
+  Shield,
+  Zap,
+} from "lucide-react";
 
 export default function UrlShortener() {
-  const [url, setUrl] = useState("");
-  const [shortUrl, setShortUrl] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [copied, setCopied] = useState(false);
-  const { data: session } = authClient.useSession();
-
-  const isLoggedIn = !!session?.user;
-
-  const createUrlMutation = trpc.createUrl.useMutation({
-    onSuccess: (data) => {
-      setShortUrl(data.shortUrl);
-    },
-  });
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!url) return;
-
-    setIsLoading(true);
-
-    // Mock shortening - just for UI demonstration
-    setTimeout(() => {
-      const shortCode = Math.random().toString(36).substring(2, 8);
-      setShortUrl(`short.link/${shortCode}`);
-      setIsLoading(false);
-    }, 800);
-  };
-
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(shortUrl);
-    setCopied(true);
-    toast.success("Short URL copied to clipboard");
-
-    setTimeout(() => setCopied(false), 2000);
-  };
   return (
     <div className="flex flex-col min-h-screen">
       <main className="flex-1">
